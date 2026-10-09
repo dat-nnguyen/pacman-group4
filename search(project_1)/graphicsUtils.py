@@ -32,6 +32,7 @@ _canvas_y = None
 _canvas_col = None      # Current colour (set to black below)
 _canvas_tsize = 12
 _canvas_tserifs = 0
+_bg_color = None
 
 def formatColor(r, g, b):
     return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
@@ -80,6 +81,14 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
         _canvas.pack()
         draw_background()
         _canvas.update()
+        if sys.platform == 'darwin':
+            try:
+                _root_window.lift()
+                _root_window.call('wm', 'attributes', '.', '-topmost', True)
+                _root_window.after_idle(_root_window.call, 'wm', 'attributes', '.', '-topmost', False)
+                _root_window.focus_force()
+            except:
+                pass
     except:
         _root_window = None
         raise
