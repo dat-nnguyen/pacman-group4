@@ -1,0 +1,2 @@
+# UC Berkeley Pacman AI projects use Python standard library and tkinter.
+# No external third-party pip packages are required.
