@@ -74,8 +74,54 @@ class ReflexAgent(Agent):
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-        "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        # "*** YOUR CODE HERE ***"
+        # return successorGameState.getScore()
+        
+        # Lay danh sach thuc an va vien nang con lai
+        foodList = newFood.asList()
+        capsules = successorGameState.getCapsules()
+
+        # Bat dau bang diem cua trang thai tiep theo
+        score = successorGameState.getScore()
+
+        # Uu tien di den thuc an gan nhat
+        if foodList:
+            minFoodDistance = min(
+                manhattanDistance(newPos, food)
+                for food in foodList
+            )
+            score += 10.0 / (minFoodDistance + 1)
+
+        # Danh gia khoang cach den cac con ma
+        for ghostState in newGhostStates:
+            ghostPos = ghostState.getPosition()
+            ghostDistance = manhattanDistance(newPos, ghostPos)
+
+            if ghostState.scaredTimer > 0:
+                # Chi khuyen khich duoi ma neu con du thoi gian
+                if ghostState.scaredTimer > ghostDistance:
+                    score += 10.0 / (ghostDistance + 1)
+            else:
+                # Tranh ma dang nguy hiem
+                if ghostDistance <= 1:
+                    score -= 200
+                elif ghostDistance == 2:
+                    score -= 20
+
+        # Uu tien vien nang khi can thiet
+        if capsules:
+            minCapsuleDistance = min(
+                manhattanDistance(newPos, capsule)
+                for capsule in capsules
+            )
+            score += 3.0 / (minCapsuleDistance + 1)
+
+        # Han che dung yen
+        if action == Directions.STOP:
+            score -= 10
+
+        return score
+
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
