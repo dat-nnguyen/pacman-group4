@@ -290,20 +290,29 @@ class CornersProblem(search.SearchProblem):
                 print('Warning: no food in corner ' + str(corner))
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
 
+# Q5
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        pos = self.startingPosition
+        # Tạo tuple 4 giá trị True/False kiểm tra xem vị trí bắt đầu có trùng với góc nào không
+        visitedCorners = tuple(pos == corner for corner in self.corners)
+        
+        # Trạng thái trả về có dạng: ((x, y), (bool, bool, bool, bool))
+        return (pos, visitedCorners)
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # state[1] lưu trữ tuple các góc đã thăm. 
+        # Đích đến đạt được khi tất cả 4 góc đều là True
+        visitedCorners = state[1]
+        return all(visitedCorners)
 
     def getSuccessors(self, state: Any):
         """
@@ -315,17 +324,34 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
         successors = []
+        
+        # Tách trạng thái hiện tại thành tọa độ và thông tin góc đã thăm
+        x, y = state[0]
+        visitedCorners = state[1]
+
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            if not hitsWall:
+                nextPos = (nextx, nexty)
+                
+                # Copy trạng thái các góc đã thăm (chuyển sang list để sửa đổi)
+                nextVisitedCorners = list(visitedCorners)
+                
+                # Nếu vị trí tiếp theo là một trong 4 góc, cập nhật trạng thái góc đó thành True
+                if nextPos in self.corners:
+                    cornerIndex = self.corners.index(nextPos)
+                    nextVisitedCorners[cornerIndex] = True
+                
+                # Đóng gói lại thành nextState và thêm vào successors
+                nextState = (nextPos, tuple(nextVisitedCorners))
+                successors.append((nextState, action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -343,7 +369,7 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
-
+# Q6
 def cornersHeuristic(state: Any, problem: CornersProblem):
     """
     A heuristic for the CornersProblem that you defined.
@@ -361,7 +387,40 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    pos = state[0]
+    visitedCorners = state[1]
+
+    # Lấy danh sách tọa độ của các góc chưa được thăm
+    unvisited_corners = []
+    for i in range(len(corners)):
+        if not visitedCorners[i]:
+            unvisited_corners.append(corners[i])
+
+    # Nếu đã thăm hết tất cả các góc thì chi phí còn lại bằng 0
+    if not unvisited_corners:
+        return 0
+
+    # Hàm phụ trợ tính khoảng cách Manhattan
+    def manhattanDistance(p1, p2):
+        return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
+
+    import itertools
+    min_distance = float('inf')
+
+    # Duyệt qua tất cả các thứ tự (hoán vị) có thể có để thăm các góc còn lại
+    for path in itertools.permutations(unvisited_corners):
+        dist = 0
+        current_pos = pos
+        
+        for corner in path:
+            dist += manhattanDistance(current_pos, corner)
+            current_pos = corner
+            
+        # Tìm đường đi có tổng khoảng cách Manhattan ngắn nhất
+        if dist < min_distance:
+            min_distance = dist
+
+    return min_distance
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
