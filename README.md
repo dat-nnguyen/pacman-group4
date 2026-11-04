@@ -54,19 +54,19 @@ Từ thư mục Project 1, chuyển sang Project 2:
 ```bash
 cd '../multiagent(project_2)'
 
-# Q1 — Reflex Agent
+# Q1 (4 pts): Reflex Agent
 python pacman.py -l openClassic -p ReflexAgent -g RandomGhost -k 1 -f
 
-# Q2 — Minimax
+# Q2 (5 pts): Minimax
 python pacman.py -l minimaxClassic -p MinimaxAgent -a depth=2 -f
 
-# Q3 — Alpha-Beta Pruning
+# Q3 (5 pts): Alpha-Beta Pruning
 python pacman.py -l minimaxClassic -p AlphaBetaAgent -a depth=2 -f
 
-# Q4 — Expectimax
+# Q4 (5 pts): Expectimax
 python pacman.py -l smallClassic -p ExpectimaxAgent -a depth=2 -g RandomGhost -k 1 -f
 
-# Q5 — Evaluation Function
+# Q5 (6 pts): Evaluation Function
 python pacman.py -l smallClassic -p ExpectimaxAgent -a evalFn=better,depth=2 -g RandomGhost -k 1 -f
 ```
 
