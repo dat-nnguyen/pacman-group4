@@ -87,7 +87,7 @@ python pacman.py -p AlphaBetaAgent -a depth=3 -l smallClassic
 python pacman.py -p ExpectimaxAgent -l minimaxClassic -a depth=3
 python pacman.py -p ExpectimaxAgent -l trappedClassic -a depth=3 -q -n 10
 
-# Q5 — Evaluation Function
+# Q5 (6 pts): Evaluation Function
 python pacman.py -l smallClassic -p ExpectimaxAgent -a evalFn=better,depth=2 -g RandomGhost -k 1 -f
 ```
 
