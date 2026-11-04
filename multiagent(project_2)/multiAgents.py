@@ -236,14 +236,18 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         if not legalActions:
             return Directions.STOP
 
-        return max(
-            legalActions,
-            key=lambda action: expectimax(
-                gameState.generateSuccessor(0, action),
-                1 if numAgents > 1 else 0,
-                0
-            )
-        )
+        if numAgents == 1:
+            nextAgent = 0
+            nextDepth = 1
+        else:
+            nextAgent = 1
+            nextDepth = 0
+
+        def actionValue(action):
+            successor = gameState.generateSuccessor(0, action)
+            return expectimax(successor, nextAgent, nextDepth)
+        return max(legalActions, key=actionValue)
+
 
 
 
@@ -254,10 +258,8 @@ def betterEvaluationFunction(currentGameState: GameState):
 
     DESCRIPTION: <write something here so we know what you did>
     """
-    if currentGameState.isWin():
-        return float("inf")
-    if currentGameState.isLose():
-        return float("-inf")
+    if currentGameState.isWin() or currentGameState.isLose():
+        return currentGameState.getScore()
 
     pacmanPos = currentGameState.getPacmanPosition()
     food = currentGameState.getFood().asList()
@@ -294,11 +296,11 @@ def betterEvaluationFunction(currentGameState: GameState):
         elif ghostDist == 0:
             score -= 500.0
         elif ghostDist == 1:
-            score -= 300.0
-        elif ghostDist == 2:
-            score -= 100.0
-        elif ghostDist ==3:
             score -= 50.0
+        elif ghostDist == 2:
+            score -= 20.0
+        elif ghostDist ==3:
+            score -= 5.0
 
     return score
 
