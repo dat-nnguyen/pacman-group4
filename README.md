@@ -87,8 +87,14 @@ python pacman.py -p AlphaBetaAgent -a depth=3 -l smallClassic
 python pacman.py -p ExpectimaxAgent -l minimaxClassic -a depth=3
 python pacman.py -p ExpectimaxAgent -l trappedClassic -a depth=3 -q -n 10
 
+# Demo Q4 trên bản đồ rộng hơn với hai ma.
+python pacman.py -p ExpectimaxAgent -l smallClassic -a depth=2 -k 2 -f
+
 # Q5 (6 pts): Evaluation Function
 python pacman.py -l smallClassic -p ExpectimaxAgent -a evalFn=better,depth=2 -g RandomGhost -k 1 -f
+
+# Kết hợp Q4 và Q5 trên mediumClassic với hai ma.
+python pacman.py -p ExpectimaxAgent -l mediumClassic -a evalFn=better,depth=2 -k 2 -f
 ```
 
 Q1, Q4 và Q5 đã hoàn thành; Q2 và Q3 chưa triển khai. `depth=2` tính hai vòng, mỗi vòng gồm Pacman và tất cả ma. Q4 dùng hàm điểm mặc định; thêm `evalFn=better` để dùng hàm Q5. Thua một ván không đồng nghĩa sai thuật toán; dùng bộ chấm để kiểm tra. Q5 cần được đánh giá qua 10 ván bằng lệnh riêng bên dưới.
