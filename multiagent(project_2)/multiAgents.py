@@ -184,6 +184,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
+#Q3
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
@@ -194,7 +195,57 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Nút gốc: Pacman (agent 0), duyệt từng hành động hợp lệ
+        alpha, beta = float('-inf'), float('inf')
+        bestValue, bestAction = float('-inf'), None
+
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            # Gọi minValue cho agent 1 (con ma đầu tiên) ở độ sâu (depth) = 0
+            value = self.minValue(successor, 1, 0, alpha, beta)   
+            if value > bestValue:
+                bestValue, bestAction = value, action
+            if bestValue > beta:      
+                return bestAction
+            alpha = max(alpha, bestValue)
+        return bestAction
+
+    def maxValue(self, state, depth, alpha, beta):     # agent 0 (Pacman)
+        # Kiểm tra trạng thái kết thúc hoặc đã đạt giới hạn độ sâu
+        if state.isWin() or state.isLose() or depth == self.depth:
+            return self.evaluationFunction(state)
+        
+        v = float('-inf')
+        for action in state.getLegalActions(0):
+            successor = state.generateSuccessor(0, action)
+            # Pacman đi xong thì đến lượt con ma đầu tiên (agentIndex = 1)
+            v = max(v, self.minValue(successor, 1, depth, alpha, beta))
+            if v > beta:
+                return v
+            alpha = max(alpha, v)
+        return v
+
+    def minValue(self, state, agentIndex, depth, alpha, beta):   # agent 1..n (Ghosts)
+        # Kiểm tra trạng thái kết thúc (không cần check depth ở đây vì depth chỉ tăng khi quay lại Pacman)
+        if state.isWin() or state.isLose():
+            return self.evaluationFunction(state)
+        
+        v = float('inf')
+        for action in state.getLegalActions(agentIndex):
+            successor = state.generateSuccessor(agentIndex, action)
+            # Nếu là con ma cuối cùng
+            if agentIndex == state.getNumAgents() - 1:
+                # Chuyển lại cho Pacman và tăng độ sâu (depth + 1)
+                nextValue = self.maxValue(successor, depth + 1, alpha, beta)
+            else:
+                # Nếu chưa phải con ma cuối, chuyển cho con ma tiếp theo cùng độ sâu
+                nextValue = self.minValue(successor, agentIndex + 1, depth, alpha, beta)
+            
+            v = min(v, nextValue)
+            if v < alpha:
+                return v
+            beta = min(beta, v)
+        return v
 
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
