@@ -5,19 +5,25 @@
 
 ## Chuẩn bị
 
-Cần Python 3 có **Tkinter** để mở giao diện; không cần cài thêm thư viện pip. Nếu chưa có `.venv`, tạo bằng `python3 -m venv .venv` với bản Python có Tkinter.
+Cần Python 3 có **Tkinter** để mở giao diện; không cần cài thêm thư viện pip. Nếu chưa có `.venv`, tạo bằng `python3 -m venv .venv` với bản Python có Tkinter. Môi trường kiểm thử của nhóm dùng Python 3.13.5.
 
 Tại thư mục gốc, kích hoạt môi trường:
 
 ```bash
 source .venv/bin/activate
+
+# Kiểm tra Python trong môi trường đã có Tkinter.
+python -c "import tkinter; print('Tkinter:', tkinter.TkVersion)"
 ```
 
 Các lệnh bên dưới dựa trên hai mô tả chính thức ở đầu README, dùng tên thư mục của repository này. Chạy riêng từng lệnh trong đúng thư mục project; mỗi project có `pacman.py` và `autograder.py` riêng.
 
+**Không chạy `python pacman.py` tại thư mục gốc** vì file này nằm trong từng project. `.venv` vẫn có hiệu lực sau khi đổi thư mục; khi mở terminal mới, kích hoạt lại từ thư mục gốc. Dùng `deactivate` để thoát môi trường.
+
 - Với `pacman.py`: `-q` tắt giao diện, `-f` cố định ngẫu nhiên, `-n 10` chạy 10 ván, `-k 1` dùng một ma.
 - `--frameTime 0` tăng tốc hoạt ảnh; `-z 0.5` thu nhỏ bàn chơi. Nhấn `Ctrl+C` trong terminal để dừng demo.
 - Với `autograder.py`, `-q q4` là **chọn câu Q4**; dùng `--no-graphics` để tắt giao diện.
+- `-p` chọn agent, `-l` chọn bản đồ, `-a` truyền cấu hình như `depth=2` hoặc `evalFn=better`. Xem mọi tùy chọn bằng `python pacman.py -h` trong thư mục project.
 
 ## Project 1 — Search
 
