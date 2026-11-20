@@ -322,10 +322,12 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                 nextAgent = 0
                 nextDepth += 1
 
-            values = [
-                expectimax(state.generateSuccessor(agentIndex, action), nextAgent, nextDepth)
-                for action in actions
-            ]
+            values = []
+
+            for action in actions:
+                successor = state.generateSuccessor(agentIndex, action)
+                value = expectimax(successor, nextAgent, nextDepth)
+                values.append(value)
 
             if agentIndex == 0:
                 return max(values)
@@ -347,9 +349,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             return expectimax(successor, nextAgent, nextDepth)
         return max(legalActions, key=actionValue)
 
-
-
-
 def betterEvaluationFunction(currentGameState: GameState):
     """
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
@@ -366,29 +365,23 @@ def betterEvaluationFunction(currentGameState: GameState):
     ghostStates = currentGameState.getGhostStates()
     score = currentGameState.getScore()
 
-    # Encourage Pacman to approach the nearest remaining food.
     if food:
         nearestFoodDist = min(manhattanDistance(pacmanPos, foodPos) for foodPos in food)
         score += 20.0 / (nearestFoodDist + 1)
         score -= 3.0 * len(food)
 
-    # Capsules are useful, especially when active ghosts are nearby.
     if capsules:
         nearestCapsuleDist = min(manhattanDistance(pacmanPos, pos) for pos in capsules)
-        activeGhostNearby = any(
-            ghost.scaredTimer == 0 and
-            manhattanDistance(pacmanPos, ghost.getPosition()) <= 5
-            for ghost in ghostStates
-        )
+        activeGhostNearby = any(ghost.scaredTimer == 0 and manhattanDistance(pacmanPos, ghost.getPosition()) <= 5 for ghost in ghostStates)
         score += (8.0 if activeGhostNearby else 2.0) / (nearestCapsuleDist + 1)
         score -= 5.0 * len(capsules)
 
-    # Avoid active ghosts; approach scared ghosts only while time permits.
     for ghost in ghostStates:
         ghostPos = ghost.getPosition()
         if ghostPos is None:
             continue
         ghostDist = manhattanDistance(pacmanPos, ghostPos)
+
         if ghost.scaredTimer > 0:
             if ghost.scaredTimer > ghostDist:
                 score += 8.0 / (ghostDist + 1)

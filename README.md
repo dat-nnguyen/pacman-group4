@@ -41,39 +41,50 @@ python pacman.py -l tinyMaze -p SearchAgent -a fn=tinyMazeSearch
 python pacman.py -l tinyMaze -p SearchAgent
 python pacman.py -l mediumMaze -p SearchAgent
 python pacman.py -l bigMaze -z 0.5 -p SearchAgent
+python autograder.py -q q1 --no-graphics
 
 # Q2 (3 pts): Breadth First Search
 python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs
 python pacman.py -l bigMaze -p SearchAgent -a fn=bfs -z 0.5
+python autograder.py -q q2 --no-graphics
 
 # Q3 (3 pts): Varying the Cost Function
 python pacman.py -l mediumMaze -p SearchAgent -a fn=ucs
 python pacman.py -l mediumDottedMaze -p StayEastSearchAgent
 python pacman.py -l mediumScaryMaze -p StayWestSearchAgent
+python autograder.py -q q3 --no-graphics
 
 # Q4 (3 pts): A* search
 python pacman.py -l bigMaze -z 0.5 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
+python autograder.py -q q4 --no-graphics
 
 # Q5 (3 pts): Finding All the Corners
 python pacman.py -l tinyCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
 python pacman.py -l mediumCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+python autograder.py -q q5 --no-graphics
 
 # Q6 (3 pts): Corners Problem: Heuristic
 python pacman.py -l mediumCorners -p AStarCornersAgent -z 0.5
+python autograder.py -q q6 --no-graphics
 
 # Q7 (4 pts): Eating All The Dots
 python pacman.py -l testSearch -p AStarFoodSearchAgent
+python pacman.py -l tinySearch -p AStarFoodSearchAgent
 python pacman.py -l trickySearch -p AStarFoodSearchAgent
+python autograder.py -q q7 --no-graphics
 
 # Q8 (3 pts): Suboptimal Search
 python pacman.py -l bigSearch -p ClosestDotSearchAgent -z 0.5
+python autograder.py -q q8 --no-graphics
 ```
 
-Q1–Q6 và Q8 đã hoàn thành. Q7 vẫn trả heuristic bằng `0`, tương đương UCS: chạy được nhưng chưa đạt yêu cầu heuristic có ích. Q3 dùng ba hàm chi phí khác nhau; quan sát `Path found` và `Search nodes expanded` để so sánh chi phí và số trạng thái được mở rộng. Q8 tìm đường nhanh nhưng không đảm bảo tổng hành trình ngắn nhất.
+Q1–Q8 đã có cài đặt. Q3 dùng ba hàm chi phí khác nhau; quan sát `Path found` và `Search nodes expanded` để so sánh chi phí và số trạng thái được mở rộng. Q7 dùng khoảng cách Manhattan lớn nhất giữa các cặp điểm gồm Pacman và thức ăn còn lại. Q8 tìm đường nhanh nhưng không đảm bảo tổng hành trình ngắn nhất; `Path found with cost 350` là tổng số bước trên `bigSearch`. Log khởi tạo Q8 có thể ghi DFS do kế thừa lớp cha, nhưng hàm tìm thức ăn thực tế gọi BFS.
 
 ## Project 2 — Multi-Agent
 
 Từ thư mục Project 1, chuyển sang Project 2:
+
+Nếu đang ở thư mục gốc thay vì Project 1, dùng `cd 'multiagent(project_2)'` thay cho lệnh `cd` đầu tiên bên dưới.
 
 ```bash
 cd '../multiagent(project_2)'
@@ -82,28 +93,41 @@ cd '../multiagent(project_2)'
 python pacman.py -p ReflexAgent -l testClassic
 python pacman.py --frameTime 0 -p ReflexAgent -k 1
 python pacman.py --frameTime 0 -p ReflexAgent -k 2
+python autograder.py -q q1 --no-graphics
 
 # Q2 — Minimax
 python pacman.py -p MinimaxAgent -l minimaxClassic -a depth=4
+python pacman.py -p MinimaxAgent -l trappedClassic -a depth=3
+python autograder.py -q q2 --no-graphics
 
 # Q3 — Alpha-Beta Pruning
 python pacman.py -p AlphaBetaAgent -a depth=3 -l smallClassic
+python pacman.py -p AlphaBetaAgent -l minimaxClassic -a depth=4
+python autograder.py -q q3 --no-graphics
 
 # Q4 — Expectimax
 python pacman.py -p ExpectimaxAgent -l minimaxClassic -a depth=3
 python pacman.py -p ExpectimaxAgent -l trappedClassic -a depth=3 -q -n 10
 
+# So sánh với Alpha-Beta trên cùng bản đồ, cùng độ sâu và số ván.
+python pacman.py -p AlphaBetaAgent -l trappedClassic -a depth=3 -q -n 10
+
 # Demo Q4 trên bản đồ rộng hơn với hai ma.
 python pacman.py -p ExpectimaxAgent -l smallClassic -a depth=2 -k 2 -f
+python autograder.py -q q4 --no-graphics
 
 # Q5 (6 pts): Evaluation Function
 python pacman.py -l smallClassic -p ExpectimaxAgent -a evalFn=better,depth=2 -g RandomGhost -k 1 -f
 
 # Kết hợp Q4 và Q5 trên mediumClassic với hai ma.
 python pacman.py -p ExpectimaxAgent -l mediumClassic -a evalFn=better,depth=2 -k 2 -f
+
+# Chạy nhanh 10 ván Q5; dùng autograder để đối chiếu kết quả chấm chính thức.
+python pacman.py -l smallClassic -p ExpectimaxAgent -a evalFn=better,depth=2 -g RandomGhost -k 1 -n 10 -q -f
+python autograder.py -q q5 --no-graphics
 ```
 
-Q1, Q4 và Q5 đã hoàn thành; Q2 và Q3 chưa triển khai. `depth=2` tính hai vòng, mỗi vòng gồm Pacman và tất cả ma. Q4 dùng hàm điểm mặc định; thêm `evalFn=better` để dùng hàm Q5. Thua một ván không đồng nghĩa sai thuật toán; dùng bộ chấm để kiểm tra. Q5 cần được đánh giá qua 10 ván bằng lệnh riêng bên dưới.
+Q1–Q5 đã có cài đặt. `depth=2` tính hai vòng, mỗi vòng gồm Pacman và tất cả ma. Q4 dùng hàm điểm mặc định; thêm `evalFn=better` để dùng hàm Q5. Tăng độ sâu hoặc số ma làm cây tìm kiếm lớn hơn và chạy chậm hơn. Thua một ván không đồng nghĩa sai thuật toán; dùng bộ chấm để kiểm tra. Để xem đồ họa của kịch bản `trappedClassic`, bỏ `-q`; để chỉ chạy một ván, bỏ thêm `-n 10`.
 
 ## Kiểm tra bằng bộ chấm
 
@@ -115,6 +139,13 @@ python autograder.py --no-graphics
 
 # Chấm riêng một câu; thay q4 bằng q1–q8 (Project 1) hoặc q1–q5 (Project 2).
 python autograder.py -q q4 --no-graphics
+```
+
+Hoặc từ thư mục gốc, sau khi kích hoạt `.venv`, chạy toàn bộ hai project lần lượt:
+
+```bash
+(cd 'search(project_1)' && python -B autograder.py --no-graphics)
+(cd 'multiagent(project_2)' && python -B autograder.py --no-graphics)
 ```
 
 Chạy một test cụ thể, bỏ phần mở rộng `.test`:
