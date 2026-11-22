@@ -182,5 +182,3 @@ Không sao chép mã hoặc chạy lẫn bộ chấm giữa hai project. Lệnh 
 - Project 1 Q7 mở rộng **8.763 trạng thái** trên `trickySearch`, đạt đầy đủ **4/4 điểm**. Log vẫn có nhãn `FAIL` ở test hiệu năng vì chưa chạm mốc thưởng thêm **7.000**; không phải toàn bộ Q7 bị đánh trượt.
 - Project 2 Q1 thắng **10/10**, trung bình **1257,7** điểm; Q5 thắng **10/10**, trung bình **1132,9** điểm.
 - Các ván kiểm thử Q2–Q4 Project 2 có thể thua nhưng vẫn đạt điểm thuật toán. Các ván demo có thể cho kết quả khác khi đổi seed, độ sâu, bản đồ hoặc số ma.
-
-Log đầy đủ: [Project 1](test-results/2026-11-21/search.log), [Project 2](test-results/2026-11-21/multiagent.log).
