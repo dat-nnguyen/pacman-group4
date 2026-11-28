@@ -161,8 +161,6 @@ python autograder.py -t test_cases/q2/0-small-tree --no-graphics
 python autograder.py -q q5 --no-graphics
 ```
 
-Không sao chép mã hoặc chạy lẫn bộ chấm giữa hai project. Lệnh demo dùng `-f` không thay thế bộ chấm: seed và cấu hình chấm đã được định nghĩa riêng trong `test_cases/`.
-
 ## Kết quả kiểm thử
 
 Đã chạy toàn bộ bộ chấm của mỗi project một lượt ngày **21/11/2026**, bằng Python **3.13.5**, với `--no-graphics`.
@@ -179,6 +177,3 @@ Không sao chép mã hoặc chạy lẫn bộ chấm giữa hai project. Lệnh 
 | Q8 | 3/3 | — |
 | **Tổng** | **25/25** | **25/25** |
 
-- Project 1 Q7 mở rộng **8.763 trạng thái** trên `trickySearch`, đạt đầy đủ **4/4 điểm**. Log vẫn có nhãn `FAIL` ở test hiệu năng vì chưa chạm mốc thưởng thêm **7.000**; không phải toàn bộ Q7 bị đánh trượt.
-- Project 2 Q1 thắng **10/10**, trung bình **1257,7** điểm; Q5 thắng **10/10**, trung bình **1132,9** điểm.
-- Các ván kiểm thử Q2–Q4 Project 2 có thể thua nhưng vẫn đạt điểm thuật toán. Các ván demo có thể cho kết quả khác khi đổi seed, độ sâu, bản đồ hoặc số ma.
